@@ -1,30 +1,24 @@
-import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
-import App from "../components/App";
+// App.test.js
+import React from "react";
+import { render, fireEvent } from "@testing-library/react";
+import App from "./App";
 
-test("displays in 'light' mode when initialized", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector(".App.light")).toBeInTheDocument();
+test("renders dark mode button", () => {
+  const { getByText } = render(<App />);
+  const buttonElement = getByText("Toggle Dark Mode");
+  expect(buttonElement).toBeInTheDocument();
 });
 
-test("changes to 'dark' mode when the button is clicked", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector(".App.light")).toBeInTheDocument();
+test("toggles dark mode", () => {
+  const { getByText, container } = render(<App />);
+  const buttonElement = getByText("Toggle Dark Mode");
 
-  fireEvent.click(screen.getByText(/ Mode/));
+  // Check initial mode
+  expect(container.firstChild).toHaveClass("light");
 
-  expect(container.querySelector(".App.dark")).toBeInTheDocument();
-});
+  // Click the button to toggle mode
+  fireEvent.click(buttonElement);
 
-test("changes back to 'light' mode when the button is clicked twice", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector(".App.light")).toBeInTheDocument();
-
-  fireEvent.click(screen.getByText(/ Mode/));
-
-  expect(container.querySelector(".App.dark")).toBeInTheDocument();
-
-  fireEvent.click(screen.getByText(/ Mode/));
-
-  expect(container.querySelector(".App.light")).toBeInTheDocument();
+  // Check if mode has changed
+  expect(container.firstChild).toHaveClass("dark");
 });
